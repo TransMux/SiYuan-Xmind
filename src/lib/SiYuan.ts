@@ -28,9 +28,32 @@ async function Apply(response: Promise<ResponseBody>) {
   return r.code === 0 ? r.data : null
 }
 
+export interface FilesUnderPath {
+  box: string
+  files: File[]
+  path: string
+}
 
+export interface File {
+  alias: string
+  bookmark: string
+  count: number
+  ctime: number // 创建时间
+  hCtime: string // 格式化的创建时间
+  hMtime: string // 相对修改时间
+  hSize: string // 文件大小
+  icon: string
+  id: string
+  memo: string
+  mtime: number // 修改时间
+  path: string // 路径
+  size: number
+  sort: number // 排序
+  subFileCount: number // 子文件数目
+}
 
-export async function listDocsByPath(path: string, notebook: string) {
+export async function listDocsByPath(path: string, notebook: string): Promise<FilesUnderPath> {
+  let result: FilesUnderPath | null = null
   let data = {
     path,
     notebook,

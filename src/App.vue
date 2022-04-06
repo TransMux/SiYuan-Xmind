@@ -1,20 +1,23 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { listDocsByPath } from "./lib/SiYuan"
+import { listDocsByPath, FilesUnderPath } from "./lib/SiYuan"
 
 
-const response = ref(null);
+const response = ref<FilesUnderPath | null>(null);
 
-listDocsByPath("20220222113553-y8m8883", "20220222081442-8yacijq").then(
-  (attrs) => {
-    console.log(attrs);
+await listDocsByPath("20220222113553-y8m8883", "20220222081442-8yacijq").then(
+  (res) => {
+    response.value = res
   }
 )
+
+console.log(response.value);
 
 </script>
 
 <template>
   <div>Hello</div>
+  <div>{{ response }}</div>
 </template>
 
 <style>
