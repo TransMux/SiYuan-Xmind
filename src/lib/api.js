@@ -233,9 +233,10 @@ async function 以id获取文档块markdown(文档id) {
     //文档hepath与Markdown 内容
 }
 
-async function 列出指定路径下文档(路径) {
+async function 列出指定路径下文档(路径, notebook) {
     let data = {
         path: 路径,
+        notebook,
     }
     let url = '/api/filetree/listDocsByPath'
     return 解析响应体(向思源请求数据(url, data))
