@@ -26,7 +26,13 @@ function FindRightNotebook() {
   Notebooks.forEach(notebook => {
     listDocsByPath(DataPath, notebook.id).then(
       res => {
-        console.log(res);
+        try {
+          if (res.files.length !== 0) {
+            RightNoteBookId.value = res.box
+          }
+        } catch (e) {
+          console.log("Closed Notebook");
+        }
       }
     )
   });
