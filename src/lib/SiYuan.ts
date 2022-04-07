@@ -6,7 +6,7 @@ interface ResponseBody {
   msg: string
 }
 
-async function Request(url: string, data: any): Promise<ResponseBody> {
+async function Request(url: string, data?: any): Promise<ResponseBody> {
   let resData = null
   await fetch(url, {
     body: JSON.stringify(data),
@@ -60,4 +60,23 @@ export async function listDocsByPath(path: string, notebook: string): Promise<Fi
   let url = '/api/filetree/listDocsByPath'
   let result = await Apply(Request(url, data))
   return result
+}
+
+export interface StandardResponse<T> {
+  code: number
+  data: T
+  msg: string
+}
+
+export interface NoteBookData {
+  closed: boolean
+  icon: string
+  id: string
+  name: string
+  sort: number
+}
+
+export async function lsNotebooks(): Promise<Map<"notebooks", NoteBookData[]>> {
+  let url = '/api/notebook/lsNotebooks'
+  return await Apply(Request(url))
 }
