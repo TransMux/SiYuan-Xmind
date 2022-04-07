@@ -53,11 +53,11 @@ export interface File {
 }
 
 export async function listDocsByPath(path: string, notebook: string): Promise<FilesUnderPath> {
-  let result: FilesUnderPath | null = null
   let data = {
     path,
     notebook,
   }
   let url = '/api/filetree/listDocsByPath'
-  return Apply(Request(url, data))
+  let result = await Apply(Request(url, data))
+  return result
 }
