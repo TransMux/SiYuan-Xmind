@@ -6,11 +6,6 @@ const OpeningFileEl = ref<Element | null>(null)
 let DataPath: string = ""
 let Notebooks: NoteBookData[]
 
-const fetchDocsList = async (path: string, notebook: string) => {
-  response.value = await listDocsByPath(path, notebook);
-};
-const response = ref<FilesUnderPath | null>(null)
-
 const fetchNoteBookList = async () => {
   // @ts-ignore
   Notebooks = (await lsNotebooks())["notebooks"]
@@ -21,42 +16,53 @@ onMounted(() => {
   console.log(OpeningFileEl.value)
   DataPath = OpeningFileEl.value?.getAttribute("data-path") || ""
 
+
   fetchNoteBookList()
 })
+
+const RightNoteBookId = ref("")
+
+function FindRightNotebook() {
+  Notebooks.forEach(notebook => {
+    listDocsByPath(DataPath, notebook.id).then(
+      res => {
+        console.log(res);
+      }
+    )
+  });
+}
 
 </script>
 
 <template>
-  <div>Hello</div>
-
-  <div>{{ response }}</div>
-
+  <div>
+    <button @click="FindRightNotebook">Find</button>
+    <span>Right NoteBook id: {{ RightNoteBookId }}</span>
+  </div>
   <li
-    title="集成学习 1.8 kB
-更新于 6 天以前
-创建于 2022-03-31 14:32:32"
-    data-node-id="20220331143232-u1jgoba"
-    data-name="集成学习.sy"
+    title="统计学习实验 379 B
+包含 2 个子文档
+更新于 1 个月以前
+创建于 2022-02-22 20:31:42"
+    data-node-id="20220222203142-xxhm9ov"
+    data-name="统计学习实验.sy"
     draggable="true"
-    data-count="0"
+    data-count="2"
     data-type="navigation-file"
     class="b3-list-item b3-list-item--hide-action b3-list-item--focus"
-    data-path="/20220331143232-u1jgoba.sy"
+    data-path="/20220222203142-xxhm9ov.sy"
   >
-    <span
-      style="padding-left: 16px"
-      class="b3-list-item__toggle b3-list-item__toggle--hl fn__hidden"
-    >
+    <span style="padding-left: 16px" class="b3-list-item__toggle b3-list-item__toggle--hl">
       <svg class="b3-list-item__arrow">
         <use xlink:href="#iconRight" />
       </svg>
     </span>
     <span class="b3-list-item__icon b3-tooltips b3-tooltips__n" aria-label="修改图标">
-      <svg>
-        <use xlink:href="#iconFile" />
+      <svg class="custom-icon">
+        <use xlink:href="#icon-1f9ea" />
       </svg>
     </span>
-    <span class="b3-list-item__text">集成学习</span>
+    <span class="b3-list-item__text">统计学习实验</span>
     <span
       data-type="more-file"
       class="b3-list-item__action b3-tooltips b3-tooltips__nw"
