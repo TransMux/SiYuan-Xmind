@@ -1,4 +1,4 @@
-import { Token } from "@/config"
+import { TOKEN } from "@/config"
 
 interface ResponseBody {
   code: number

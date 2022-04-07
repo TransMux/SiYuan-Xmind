@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { onMounted, ref, watchEffect } from "vue";
 import { listDocsByPath, FilesUnderPath, lsNotebooks, NoteBookData } from "./lib/SiYuan"
+import { save_xmind } from "./lib/M3Creator"
+
 
 const OpeningFileEl = ref<Element | null>(null)
 let DataPath: string = ""
 let Notebooks: NoteBookData[]
+let m3 = ""
 
 const fetchNoteBookList = async () => {
   // @ts-ignore
@@ -15,7 +18,8 @@ onMounted(() => {
   OpeningFileEl.value = document.getElementsByClassName("b3-list-item b3-list-item--hide-action b3-list-item--focus")[0]
   console.log(OpeningFileEl.value)
   DataPath = OpeningFileEl.value?.getAttribute("data-path") || ""
-
+  // 定义 m3 初始值
+  m3 = OpeningFileEl.value?.getAttribute("data-name") || ""
 
   fetchNoteBookList()
 })
@@ -38,13 +42,16 @@ function FindRightNotebook() {
   });
 }
 
+
 </script>
 
 <template>
   <div>
-    <button @click="FindRightNotebook">Find</button>
+    <!-- TODO:加入自毁 -->
+    <button @click="FindRightNotebook">寻找当前页面及以下</button>
     <span>Right NoteBook id: {{ RightNoteBookId }}</span>
   </div>
+  <button @click="save_xmind">Export</button>
   <li
     title="统计学习实验 379 B
 包含 2 个子文档
