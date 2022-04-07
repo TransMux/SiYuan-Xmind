@@ -1,6 +1,7 @@
 import { parseXMindMarkToXMindFile } from 'xmindmark'
 import save from 'save-file'
 import { listDocsByPath, getDocOutline, DocOutline } from './SiYuan'
+import { resolve } from 'path'
 
 const xmindMarkFileContent = `
 Central Topic
@@ -11,7 +12,7 @@ Central Topic
 const indent = "    "
 
 
-export async function CreateM3(center: string, notebook: string, path: string): Promise<string> {
+export async function CreateM3(center: string, notebook: string, path: string) {
   let result = `${center}\n` // 添加中心节点
   console.log("Create", center, notebook, path);
   await ListFile(notebook, path).then(
@@ -19,7 +20,7 @@ export async function CreateM3(center: string, notebook: string, path: string): 
       result += res
     }
   )
-  return result
+  console.log(result);
 }
 
 async function ListFile(notebook: string, path: string, index = 0): Promise<string> {
@@ -27,11 +28,12 @@ async function ListFile(notebook: string, path: string, index = 0): Promise<stri
   await listDocsByPath(path, notebook).then(
     res => {
       res.files.forEach(async file => {
-        result += `${indent.repeat(index)}- ${file.name.replace("&nbsp;", " ")}\n`
+        result += `${indent.repeat(index)}- ${file.name.replaceAll("&nbsp;", " ")}\n`
         await getDocOutline(file.id).then(
           res => {
             if (res.length > 0) {
               result += ExtractOutline(res[0].blocks, index + 1)
+              console.log(result);
             }
           })
 
@@ -40,6 +42,8 @@ async function ListFile(notebook: string, path: string, index = 0): Promise<stri
           await ListFile(notebook, file.path, index + 1).then(
             res => result += res
           )
+          console.log(result);
+
         }
       });
     }
@@ -53,7 +57,7 @@ function ExtractOutline(outlines: DocOutline[] | undefined | null, index: number
   }
   let result = ""
   outlines.forEach(outline => {
-    let content = outline.content.replace("&nbsp;", " ")
+    let content = outline.content.replaceAll("&nbsp;", " ")
     result += `${indent.repeat(index)}- ${content}\n`
     result += ExtractOutline(outline.children, index + 1)
   }
