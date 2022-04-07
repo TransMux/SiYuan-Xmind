@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { onMounted, ref, watchEffect } from "vue";
 import { listDocsByPath, FilesUnderPath, lsNotebooks, NoteBookData } from "./lib/SiYuan"
-import { save_xmind } from "./lib/M3Creator"
+import { save_xmind, CreateM3 } from "./lib/M3Creator"
 
 
 const OpeningFileEl = ref<Element | null>(null)
-let DataPath: string = ""
+const DataPath = ref("")
 let Notebooks: NoteBookData[]
-let m3 = ""
+const center = ref("")
 
 const fetchNoteBookList = async () => {
   // @ts-ignore
@@ -17,9 +17,9 @@ const fetchNoteBookList = async () => {
 onMounted(() => {
   OpeningFileEl.value = document.getElementsByClassName("b3-list-item b3-list-item--hide-action b3-list-item--focus")[0]
   console.log(OpeningFileEl.value)
-  DataPath = OpeningFileEl.value?.getAttribute("data-path") || ""
+  DataPath.value = OpeningFileEl.value?.getAttribute("data-path") || ""
   // 定义 m3 初始值
-  m3 = OpeningFileEl.value?.getAttribute("data-name") || ""
+  center.value = OpeningFileEl.value?.getAttribute("data-name") || ""
 
   fetchNoteBookList()
 })
@@ -28,7 +28,7 @@ const RightNoteBookId = ref("")
 
 function FindRightNotebook() {
   Notebooks.forEach(notebook => {
-    listDocsByPath(DataPath, notebook.id).then(
+    listDocsByPath(DataPath.value, notebook.id).then(
       res => {
         try {
           if (res.files.length !== 0) {
@@ -41,8 +41,6 @@ function FindRightNotebook() {
     )
   });
 }
-
-
 </script>
 
 <template>
@@ -52,6 +50,7 @@ function FindRightNotebook() {
     <span>Right NoteBook id: {{ RightNoteBookId }}</span>
   </div>
   <button @click="save_xmind">Export</button>
+  <button @click="CreateM3(center, RightNoteBookId, DataPath)">Render</button>
   <li
     title="统计学习实验 379 B
 包含 2 个子文档

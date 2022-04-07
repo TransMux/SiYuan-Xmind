@@ -46,6 +46,8 @@ export interface File {
   id: string
   memo: string
   mtime: number // 修改时间
+  name: string
+  name1: string
   path: string // 路径
   size: number
   sort: number // 排序
@@ -79,4 +81,22 @@ export interface NoteBookData {
 export async function lsNotebooks(): Promise<Map<"notebooks", NoteBookData[]>> {
   let url = '/api/notebook/lsNotebooks'
   return await Apply(Request(url))
+}
+
+export interface DocOutline {
+  children: DocOutline[] | null
+  count: number // 这一级有多少标题
+  alias: string
+  depth: number
+  content: string // 内容
+  id: string
+}
+
+export async function getDocOutline(id: string): Promise<Record<"blocks", DocOutline[]>[]> {
+  // 因为思源的API有点混乱，所以这里只关注了目前来说有用到的信息
+  let data = {
+    id,
+  }
+  let url = '/api/outline/getDocOutline'
+  return await Apply(Request(url, data))
 }
