@@ -1,7 +1,6 @@
 import { parseXMindMarkToXMindFile } from 'xmindmark'
 import save from 'save-file'
 import { listDocsByPath, getDocOutline, DocOutline } from './SiYuan'
-import { resolve } from 'path'
 
 const xmindMarkFileContent = `
 Central Topic
@@ -15,34 +14,28 @@ const indent = "    "
 export async function CreateM3(center: string, notebook: string, path: string) {
   let result = `${center}\n` // 添加中心节点
   console.log("Create", center, notebook, path);
-  await ListFile(notebook, path).then(
-    res => {
-      result += res
-    }
-  )
+  result += ListFile(notebook, path)
   console.log(result);
 }
 
-async function ListFile(notebook: string, path: string, index = 0): Promise<string> {
+function ListFile(notebook: string, path: string, index = 0): string {
   let result = ""
-  await listDocsByPath(path, notebook).then(
+  listDocsByPath(path, notebook).then(
     res => {
-      res.files.forEach(async file => {
+      res.files.forEach(file => {
         result += `${indent.repeat(index)}- ${file.name.replaceAll("&nbsp;", " ")}\n`
-        await getDocOutline(file.id).then(
+        getDocOutline(file.id).then(
           res => {
             if (res.length > 0) {
               result += ExtractOutline(res[0].blocks, index + 1)
-              console.log(result);
+              // console.log(result);
             }
           })
 
         // 查找子文件
         if (file.subFileCount > 0) {
-          await ListFile(notebook, file.path, index + 1).then(
-            res => result += res
-          )
-          console.log(result);
+          result += ListFile(notebook, file.path, index + 1)
+          // console.log(result);
 
         }
       });
