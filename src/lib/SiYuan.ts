@@ -1,4 +1,5 @@
 import { TOKEN } from "@/config"
+import { resolve } from "path"
 
 interface ResponseBody {
   code: number
@@ -54,13 +55,13 @@ export interface File {
   subFileCount: number // 子文件数目
 }
 
-export async function listDocsByPath(path: string, notebook: string): Promise<FilesUnderPath> {
+export function listDocsByPath(path: string, notebook: string): Promise<FilesUnderPath> {
   let data = {
     path,
     notebook,
   }
   let url = '/api/filetree/listDocsByPath'
-  let result = await Apply(Request(url, data))
+  let result = Apply(Request(url, data))
   return result
 }
 
@@ -78,9 +79,9 @@ export interface NoteBookData {
   sort: number
 }
 
-export async function lsNotebooks(): Promise<Map<"notebooks", NoteBookData[]>> {
+export function lsNotebooks(): Promise<Map<"notebooks", NoteBookData[]>> {
   let url = '/api/notebook/lsNotebooks'
-  return await Apply(Request(url))
+  return Apply(Request(url))
 }
 
 export interface DocOutline {
@@ -92,11 +93,11 @@ export interface DocOutline {
   id: string
 }
 
-export async function getDocOutline(id: string): Promise<Record<"blocks", DocOutline[]>[]> {
+export function getDocOutline(id: string): Promise<Record<"blocks", DocOutline[]>[]> {
   // 因为思源的API有点混乱，所以这里只关注了目前来说有用到的信息
   let data = {
     id,
   }
   let url = '/api/outline/getDocOutline'
-  return await Apply(Request(url, data))
+  return Apply(Request(url, data))
 }
