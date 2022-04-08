@@ -20,6 +20,12 @@ jobs:
       - name: Build
         run: npm run build # The build command of your project
     
+      - name: Copy Necessary elements
+        run: |
+          cp widget.json build/widget.json
+          cp README.md build/README.md
+          cp png build/png -r
+
       - name: Push
         uses: s0/git-publish-subdir-action@develop
         env:
