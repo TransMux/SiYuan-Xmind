@@ -18,7 +18,6 @@ export async function CreateM3(center: string, notebook: string, path: string) {
   console.log(`Create center:${center} notebook:${notebook} path:${path}`);
   // 递归入口
   result += await ListFile(notebook, path)
-  console.log(result);
   save_xmind(result)
 }
 
@@ -31,10 +30,7 @@ async function ListFile(notebook: string, path: string, index = 0): Promise<stri
     async (memo, file) => {
       await memo
       result += `${indent.repeat(index)}- ${file.name.replaceAll("&nbsp;", " ")}\n`
-      console.log(file.name);
       const outline = await getDocOutline(file.id)
-      console.log(outline);
-
       if (outline.length > 0) {
         result += ExtractOutline(outline[0].blocks, index + 1)
       }
@@ -44,7 +40,6 @@ async function ListFile(notebook: string, path: string, index = 0): Promise<stri
       }
     }, undefined
   )
-  console.log("Done");
   return result
 }
 

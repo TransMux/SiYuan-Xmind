@@ -53,6 +53,10 @@ const tip = ref("导出当前文件及其子文件的大纲为XMind")
 async function ExportToXmind() {
   tip.value = '锁定当前笔记本中...';
   await FindRightNotebook()
+  if (!RightNoteBookId.value) {
+    tip.value = `锁定当前笔记本失败，若能稳定复现麻烦提个Issue帮助解决此问题~`;
+    return
+  }
   tip.value = `正在导出...(${RightNoteBookId.value})`;
   await CreateM3(center.value, RightNoteBookId.value, DataPath.value)
   tip.value = `完成！`;
