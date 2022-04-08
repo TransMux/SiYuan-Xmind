@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { onMounted, ref, watchEffect } from "vue";
-import { listDocsByPath, FilesUnderPath, lsNotebooks, NoteBookData } from "./lib/SiYuan"
-import { save_xmind, CreateM3 } from "./lib/M3Creator"
+import { onMounted, ref } from "vue";
+import { listDocsByPath, lsNotebooks, NoteBookData } from "./lib/SiYuan"
+import { CreateM3 } from "./lib/M3Creator"
 
 
 const OpeningFileEl = ref<Element | null>(null)
@@ -15,19 +15,24 @@ const fetchNoteBookList = async () => {
 }
 
 onMounted(() => {
-  OpeningFileEl.value = document.getElementsByClassName("b3-list-item b3-list-item--hide-action b3-list-item--focus")[0]
+  Setup()
+})
+
+function Setup() {
+  fetchNoteBookList()
+  OpeningFileEl.value = window.parent.document.getElementsByClassName("b3-list-item b3-list-item--hide-action b3-list-item--focus")[0]
   console.log(OpeningFileEl.value)
   DataPath.value = OpeningFileEl.value?.getAttribute("data-path") || ""
   // 定义 m3 初始值
   center.value = OpeningFileEl.value?.getAttribute("data-name") || ""
-
-  fetchNoteBookList()
-})
+}
 
 const RightNoteBookId = ref("")
 
 
 async function FindRightNotebook() {
+  console.log("Finding Corelated notebook for:", DataPath.value);
+
   await Promise.all(
     Notebooks.map(async (notebook) => {
       const res = await listDocsByPath(DataPath.value, notebook.id)
@@ -42,60 +47,28 @@ async function FindRightNotebook() {
   )
   console.log("Done");
 }
+
+const tip = ref("导出当前文件及其子文件的大纲为XMind")
+
+async function ExportToXmind() {
+  tip.value = '锁定当前笔记本中...';
+  await FindRightNotebook()
+  tip.value = `正在导出...(${RightNoteBookId.value})`;
+  await CreateM3(center.value, RightNoteBookId.value, DataPath.value)
+  tip.value = `完成！`;
+}
+
 </script>
 
 <template>
   <div>
-    <!-- TODO:加入自毁 -->
-    <button @click="FindRightNotebook">寻找当前页面及以下</button>
-    <span>Right NoteBook id: {{ RightNoteBookId }}</span>
+    <t-button
+      :style="{
+        'margin': 'auto',
+        'display': 'block'
+      }"
+      @click="ExportToXmind"
+      theme="primary"
+    >{{ tip }}</t-button>
   </div>
-  <button @click="save_xmind">Export</button>
-  <button @click="CreateM3(center, RightNoteBookId, DataPath)">Render</button>
-  <li
-    title="统计学习实验 379 B
-包含 2 个子文档
-更新于 1 个月以前
-创建于 2022-02-22 20:31:42"
-    data-node-id="20220222203142-xxhm9ov"
-    data-name="统计学习实验.sy"
-    draggable="true"
-    data-count="2"
-    data-type="navigation-file"
-    class="b3-list-item b3-list-item--hide-action b3-list-item--focus"
-    data-path="/20220222203142-xxhm9ov.sy"
-  >
-    <span style="padding-left: 16px" class="b3-list-item__toggle b3-list-item__toggle--hl">
-      <svg class="b3-list-item__arrow">
-        <use xlink:href="#iconRight" />
-      </svg>
-    </span>
-    <span class="b3-list-item__icon b3-tooltips b3-tooltips__n" aria-label="修改图标">
-      <svg class="custom-icon">
-        <use xlink:href="#icon-1f9ea" />
-      </svg>
-    </span>
-    <span class="b3-list-item__text">统计学习实验</span>
-    <span
-      data-type="more-file"
-      class="b3-list-item__action b3-tooltips b3-tooltips__nw"
-      aria-label="更多"
-    >
-      <svg>
-        <use xlink:href="#iconMore" />
-      </svg>
-    </span>
-    <span
-      data-type="new"
-      class="b3-list-item__action b3-tooltips b3-tooltips__nw"
-      aria-label="新建文档"
-    >
-      <svg>
-        <use xlink:href="#iconFile" />
-      </svg>
-    </span>
-  </li>
 </template>
-
-<style>
-</style>

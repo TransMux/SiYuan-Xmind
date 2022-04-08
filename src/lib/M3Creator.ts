@@ -1,7 +1,6 @@
 import { parseXMindMarkToXMindFile } from 'xmindmark'
 import save from 'save-file'
 import { listDocsByPath, getDocOutline, DocOutline } from './SiYuan'
-import { resolve } from 'path'
 
 // m3字符串的格式大概就是这样的
 const xmindMarkFileContent = `
@@ -16,10 +15,11 @@ const indent = "    "
 export async function CreateM3(center: string, notebook: string, path: string) {
   // 入口函数，开始构建大纲列表
   let result = `${center}\n` // 添加中心节点
-  console.log("Create", center, notebook, path);
+  console.log(`Create center:${center} notebook:${notebook} path:${path}`);
   // 递归入口
   result += await ListFile(notebook, path)
   console.log(result);
+  save_xmind(result)
 }
 
 async function ListFile(notebook: string, path: string, index = 0): Promise<string> {
@@ -63,7 +63,7 @@ function ExtractOutline(outlines: DocOutline[] | undefined | null, index: number
   return result
 }
 
-export const save_xmind = async () => {
-  const xmindArrayBuffer = await parseXMindMarkToXMindFile(xmindMarkFileContent)
+export const save_xmind = async (str: string) => {
+  const xmindArrayBuffer = await parseXMindMarkToXMindFile(str)
   await save(xmindArrayBuffer, 'result.xmind')
 }
