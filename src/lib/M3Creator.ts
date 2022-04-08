@@ -26,23 +26,23 @@ async function ListFile(notebook: string, path: string, index = 0): Promise<stri
   let result = ""
   // 列出当前目录下的全部文件
   const docs = await listDocsByPath(path, notebook)
-  await Promise.all(
-    docs.files.map(
-      async (file) => {
-        result += `${indent.repeat(index)}- ${file.name.replaceAll("&nbsp;", " ")}\n`
-        console.log(file.name);
-        const outline = await getDocOutline(file.id)
-        console.log(outline);
+  await docs.files.reduce(
+    // @ts-ignore TODO: reduce 此处TS会报错
+    async (memo, file) => {
+      await memo
+      result += `${indent.repeat(index)}- ${file.name.replaceAll("&nbsp;", " ")}\n`
+      console.log(file.name);
+      const outline = await getDocOutline(file.id)
+      console.log(outline);
 
-        if (outline.length > 0) {
-          result += ExtractOutline(outline[0].blocks, index + 1)
-        }
-
-        if (file.subFileCount > 0) {
-          result += await ListFile(notebook, file.path, index + 1)
-        }
+      if (outline.length > 0) {
+        result += ExtractOutline(outline[0].blocks, index + 1)
       }
-    )
+
+      if (file.subFileCount > 0) {
+        result += await ListFile(notebook, file.path, index + 1)
+      }
+    }, undefined
   )
   console.log("Done");
   return result
