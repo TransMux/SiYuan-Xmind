@@ -26,20 +26,21 @@ onMounted(() => {
 
 const RightNoteBookId = ref("")
 
-function FindRightNotebook() {
-  Notebooks.forEach(notebook => {
-    listDocsByPath(DataPath.value, notebook.id).then(
-      res => {
-        try {
-          if (res.files.length !== 0) {
-            RightNoteBookId.value = res.box
-          }
-        } catch (e) {
-          console.log("Closed Notebook");
+
+async function FindRightNotebook() {
+  await Promise.all(
+    Notebooks.map(async (notebook) => {
+      const res = await listDocsByPath(DataPath.value, notebook.id)
+      try {
+        if (res.files.length !== 0) {
+          RightNoteBookId.value = res.box
         }
+      } catch (e) {
+        console.log("Closed Notebook");
       }
-    )
-  });
+    })
+  )
+  console.log("Done");
 }
 </script>
 
