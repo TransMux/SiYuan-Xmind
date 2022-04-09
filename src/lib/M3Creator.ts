@@ -18,7 +18,8 @@ export async function CreateM3(center: string, notebook: string, path: string) {
   console.log(`Create center:${center} notebook:${notebook} path:${path}`);
   // 递归入口
   result += await ListFile(notebook, path)
-  save_xmind(result)
+  return result
+
 }
 
 async function ListFile(notebook: string, path: string, index = 0): Promise<string> {
