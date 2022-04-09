@@ -138,6 +138,7 @@ export async function getSiYuanBlock() {
   let id = ""
   let box = "" // 当前块所在笔记本id
   let path = "" // 当前块所在文件路径id
+  let name = "" // 当前块所在文件名
 
   try {
     // @ts-ignore 如果不在iframe中这句话会报错
@@ -146,9 +147,10 @@ export async function getSiYuanBlock() {
     id = "20220409111944-x7jv4f0"
   }
 
-  const res = await sqlRequest(`SELECT box,path FROM blocks WHERE id = '${id}' LIMIT 1`)
+  const res = await sqlRequest(`SELECT box,path,hpath FROM blocks WHERE id = '${id}' LIMIT 1`)
   box = res[0].box
   path = res[0].path
+  name = res[0].hpath.split("/").pop() || "中心主题"
 
-  return { id, box, path }
+  return { id, box, path, name }
 }
