@@ -8,7 +8,9 @@ import * as markmap from "markmap-view";
 
 const tip = ref("转换当前文件及其子文件的大纲为XMind");
 
-let markdown: string
+let markdown: string = ""
+let CurrentMarkmap: markmap.Markmap
+
 async function ExportToXmind() {
   let { id, box, path, name } = await getSiYuanBlock()
   console.log(`id: ${id}, box: ${box}, path: ${path}`);
@@ -17,7 +19,7 @@ async function ExportToXmind() {
   markdown += await ListFile(box, path)
   tip.value = `完成！`;
   console.log(markdown);
-  setTimeout(() => tip.value = "更新", 5000)
+  setTimeout(() => tip.value = "更新", 3000)
 
   const transformer = new Transformer();
 
@@ -35,7 +37,11 @@ async function ExportToXmind() {
 
   // 2. create markmap
   // `options` is optional, i.e. `undefined` can be passed here
-  Markmap.create("#markmap", undefined, root);
+  if (CurrentMarkmap) {
+    CurrentMarkmap.renderData(root)
+  } else {
+    CurrentMarkmap = Markmap.create("#markmap", undefined, root);
+  }
 }
 
 async function SaveXmind() {
