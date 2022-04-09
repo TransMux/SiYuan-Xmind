@@ -12,17 +12,7 @@ Central Topic
 const indent = "    "
 
 
-export async function CreateM3(center: string, notebook: string, path: string) {
-  // 入口函数，开始构建大纲列表
-  let result = `${center}\n` // 添加中心节点
-  console.log(`Create center:${center} notebook:${notebook} path:${path}`);
-  // 递归入口
-  result += await ListFile(notebook, path)
-  return result
-
-}
-
-async function ListFile(notebook: string, path: string, index = 0): Promise<string> {
+export async function ListFile(notebook: string, path: string, index = 0): Promise<string> {
   let result = ""
   // 列出当前目录下的全部文件
   const docs = await listDocsByPath(path, notebook)
