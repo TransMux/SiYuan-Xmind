@@ -24,7 +24,6 @@ jobs:
         run: |
           cp widget.json dist/widget.json
           cp README.md dist/README.md
-          cp png dist/png -r
           cp preview.png dist/preview.png
 
       - name: Push

@@ -8,7 +8,7 @@
 
 ## 效果图
 
-![export](png/export.png)
+[![export](png/export.png)](https://b3logfile.com/siyuan/1613565605390/assets/image-20220410002237-zr7sb1a.png)
 
 ## 食用方法
 
