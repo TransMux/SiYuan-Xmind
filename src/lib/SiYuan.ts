@@ -101,3 +101,34 @@ export function getDocOutline(id: string): Promise<Record<"blocks", DocOutline[]
   let url = '/api/outline/getDocOutline'
   return Apply(Request(url, data))
 }
+
+
+export interface sqlResult {
+  alias: string // 别名
+  box: string // 所在笔记本id
+  content: string // 不带markdown的纯文本
+  created: string // 创建时间 "20201224120447"
+  hash: string
+  hpath: string // 人类可读路径 "/请从这里开始/内容块/嵌入内容块"
+  ial: string
+  id: string // 块id
+  length: number // 长度
+  markdown: string // markdown
+  memo: string
+  name: string
+  parent_id: string
+  path: string // 真实路径
+  root_id: string // 文件id
+  sort: number
+  subtype: string
+  type: string // 块类型
+  updated: string // 修改时间 "20210512154659"
+}
+
+export function sqlRequest(sql: string): Promise<sqlResult[]> {
+  let data = {
+    stmt: sql,
+  }
+  let url = '/api/query/sql'
+  return Apply(Request(url, data))
+}
