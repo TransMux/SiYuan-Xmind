@@ -21,5 +21,6 @@ export default defineConfig({
       }
     }
   },
-  base: './'
+  base: './',
+  root: './'
 })
