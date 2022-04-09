@@ -1,5 +1,6 @@
 import { TOKEN } from "@/config"
 import { resolve } from "path"
+import { ref } from "vue"
 
 interface ResponseBody {
   code: number
@@ -131,4 +132,23 @@ export function sqlRequest(sql: string): Promise<sqlResult[]> {
   }
   let url = '/api/query/sql'
   return Apply(Request(url, data))
+}
+
+export async function getSiYuanBlock() {
+  let id = ""
+  let box = "" // 当前块所在笔记本id
+  let path = "" // 当前块所在文件路径id
+
+  try {
+    // @ts-ignore 如果不在iframe中这句话会报错
+    id = window.frameElement.parentElement.parentElement.dataset.nodeId
+  } catch (e) {
+    id = "20220409111944-x7jv4f0"
+  }
+
+  const res = await sqlRequest(`SELECT box,path FROM blocks WHERE id = '${id}' LIMIT 1`)
+  box = res[0].box
+  path = res[0].path
+
+  return { id, box, path }
 }
