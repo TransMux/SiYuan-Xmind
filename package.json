@@ -12,7 +12,7 @@
     "markmap-lib": "^0.12.0",
     "markmap-view": "^0.2.7",
     "save-file": "^2.3.1",
-    "tdesign-vue-next": "^0.11.2",
+    "tdesign-vue-next": "^1.0.1",
     "vue": "^3.2.25",
     "xmindmark": "^0.2.1"
   },
