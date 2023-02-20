@@ -12,15 +12,16 @@
     "markmap-lib": "^0.12.0",
     "markmap-view": "^0.2.7",
     "save-file": "^2.3.1",
-    "tdesign-vue-next": "^0.11.2",
-    "vue": "^3.2.25",
-    "xmindmark": "^0.2.1"
+    "tdesign-vue-next": "^1.0.6",
+    "vue": "^3.2.47",
+    "xmindmark": "^0.3.2"
   },
   "devDependencies": {
-    "@types/node": "^17.0.23",
-    "@vitejs/plugin-vue": "^2.3.0",
-    "typescript": "^4.5.4",
-    "vite": "^2.9.0",
-    "vue-tsc": "^0.29.8"
+    "@types/node": "^18.13.0",
+    "@types/remarkable": "^2.0.3",
+    "@vitejs/plugin-vue": "^4.0.0",
+    "typescript": "^4.9.5",
+    "vite": "^4.1.1",
+    "vue-tsc": "^1.0.24"
   }
 }
