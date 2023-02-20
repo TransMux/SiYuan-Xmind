@@ -20,25 +20,32 @@ export async function ListFile(notebook: string,
     if (index === 0) {
         result += `${name.replaceAll("&nbsp;", " ")}\n`
     } else {
-        result += `${indent.repeat(index)}- ${name.replaceAll("&nbsp;", " ")}\n`
+        result += `${indent.repeat(index - 1)}- ${name.replaceAll("&nbsp;", " ")}\n`
     }
     const outline = await getDocOutline(id)
     if (outline.length > 0) {
-        result += ExtractOutline(outline[0].blocks, index)
+        result += ExtractOutline(outline, index)
     }
 
     // 列出当前目录下的全部文件
     const docs = await listDocsByPath(path, notebook)
-    await docs.files.reduce(
-        // @ts-ignore TODO: reduce 此处TS会报错
-        async (memo, file) => {
-            await memo
-            //  添加当前目录下其他文件的信息
-            if (file.subFileCount > 0) {
-                result += await ListFile(notebook, file.path, file.name, file.id, index + 1)
-            }
-        }, undefined
-    )
+    console.log(name, index, docs)
+
+    for (const file of docs.files) {
+        //  添加当前目录下其他文件的信息
+        result += await ListFile(notebook, file.path, file.name, file.id, index + 1)
+    }
+
+    // await docs.files.reduce(
+    //     // @ts-ignore TODO: reduce 此处TS会报错
+    //     async (memo, file) => {
+    //         await memo
+    //         //  添加当前目录下其他文件的信息
+    //         if (file.subFileCount > 0) {
+    //             result += await ListFile(notebook, file.path, file.name, file.id, index + 1)
+    //         }
+    //     }, undefined
+    // )
     return result
 }
 
@@ -48,11 +55,15 @@ function ExtractOutline(outlines: DocOutline[] | undefined | null, index: number
     }
     let result = ""
     outlines.map((outline => {
+        // @ts-ignore
+        let title = outline.name ? outline.name : outline.content
         // 替换标题中的空格
-        let content = outline.content.replaceAll("&nbsp;", " ")
+        let content = title.replaceAll("&nbsp;", " ")
         result += `${indent.repeat(index)}- ${content}\n`
         // 然后加进来，如果这个标题下面有小标题，那么递归调用也把它加进来
-        result += ExtractOutline(outline.children, index + 1)
+        // @ts-ignore
+        let children = outline.blocks ? outline.blocks : outline.children
+        result += ExtractOutline(children, index + 1)
     }))
     return result
 }

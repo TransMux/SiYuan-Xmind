@@ -145,7 +145,7 @@ export async function getSiYuanBlock() {
     id = window.frameElement.parentElement.parentElement.dataset.nodeId
   } catch (e) {
     // TODO: 设置一个文本框，让用户输入块id
-    id = "20230209164756-ym75tcp"
+    id = "20230201111832-ztc0cm0"
   }
 
   const res = await sqlRequest(`SELECT box,path,hpath FROM blocks WHERE id = '${id}' LIMIT 1`)
